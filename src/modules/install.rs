@@ -11,11 +11,13 @@ fn run(cmd: &str) -> bool {
 
 pub fn install_tool(title: &str, package_string: &str, ask: &str) -> bool {
     let package_list: Vec<&str> = package_string.split_whitespace().collect();
-    println!("{} Packages to install: {:?}", package_list);
-    println!("{} Ask prompt: {}", ask);
+    println!("Packages to install: {:?}", package_list);
+    println!("Ask prompt: {}", ask);
 
     for package in package_list {
-        let tag = format!("\x1B[32m{}\x1B[0m", format!("[Installing {} >> {}]", package, todo.title));
+        let tag = format!("\x1B[32m{}\x1B[0m", format!("[Installing {} >> {}]", package, title));
+        println!("{}", tag);
+
         let cmd = if ask == "true" {
             format!("sudo apt install {}", package)
         } else {

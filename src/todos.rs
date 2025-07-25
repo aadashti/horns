@@ -2,6 +2,8 @@ use serde::Deserialize;
 use std::{error::Error, fs, path::Path};
 #[path = "modules/install.rs"]
 mod install;
+#[path = "modules/script.rs"]
+mod script;
 
 #[derive(Debug, Deserialize)]
 pub struct Todo {
@@ -34,7 +36,9 @@ pub fn print_todos(todos: &[Todo]) {
         }
 
         if todo.id == "script" {
-            let tag = format!("[Running >> {}]", todo.title);
+            if !script::script_tool(&todo.title, &todo.detail, &todo.ask) {
+                eprintln!("A process failed to run, skipping…");
+            }
         }
     }
 }

@@ -1,0 +1,5 @@
+[
+  { "id": "install", "title": "Adding Dependencies", "detail": "falkon", "ask": "true"},
+  { "id": "script", "title": "Build a project", "detail": "neofetch" },
+  { "id": "script", "title": "Celebrate success!", "detail": "ls" }
+]
