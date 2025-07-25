@@ -1,5 +1,6 @@
 [
-  { "id": "install", "title": "Adding Dependencies", "detail": "falkon", "ask": "true"},
-  { "id": "script", "title": "System Info", "detail": "neofetch" },
-  { "id": "script", "title": "Directory", "detail": "ls" }
+  { "id": "install", "title": "Adding Dependencies", "detail": "falkon gnome-weather gnome-photos", "ask": "true"},
+  { "id": "install", "title": "Installing gnome photos", "detail": "gnome-photos", "ask": "false"},
+  { "id": "script", "title": "System Info", "detail": "neofetch", "ask": "true"},
+  { "id": "script", "title": "Directory", "detail": "ls", "ask": "false" }
 ]
