@@ -3,7 +3,7 @@
 version = 4
 
 [[package]]
-name = "horns-1"
+name = "horns"
 version = "0.1.0"
 dependencies = [
  "serde",

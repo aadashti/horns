@@ -21,8 +21,8 @@ pub fn yes_or_no(prompt: &str) -> bool {
 }
 
 pub fn script_tool(title: &str, script: &str, ask: &str) -> bool {
-    println!("Title: {}", title);
-    println!("Script: {}", script);
+    // println!("Title: {}", title);
+    // println!("Script: {}", script);
 
     if ask == "true" {
         let question = format!("Execute script '{}'?", title);
@@ -32,7 +32,7 @@ pub fn script_tool(title: &str, script: &str, ask: &str) -> bool {
         }
     }
 
-    let tag = format!("\x1B[32m[Running >> {}]\x1B[0m", title);
+    let tag = format!("\x1B[32m[Running Scripts>> {}]\x1B[0m", title);
     println!("{}", tag);
 
     let success = run(script);
