@@ -1,0 +1,5 @@
+[
+  { "id": "install", "title": "Adding Dependencies", "detail": "terminator", "ask": "ture"},
+  { "id": "script", "title": "Build a project", "detail": "nanofetch" },
+  { "id": "script", "title": "Celebrate success!", "detail": "ls" }
+]
