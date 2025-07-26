@@ -12,9 +12,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Restore a config from a JSON file
     ConfigRestore {
-        /// Path to your JSON config
         path: String,
     },
 }
