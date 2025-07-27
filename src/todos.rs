@@ -31,13 +31,19 @@ pub fn print_todos(todos: &[Todo]) {
 
         if todo.id == "install" {
             if !install::install_tool(&todo.title, &todo.detail, &todo.ask) {
-                eprintln!("A process failed to run, skipping…");
+                eprintln!("Skipping the follownig task due to the previous error/s:\n***************\nid={}\ntitle={}\ndetail={}\nask={}\n***************",
+                todo.id, todo.title, todo.detail, todo.ask);
+            } else {
+                println!("Task {} succeeded", todo.title);
             }
         }
 
         if todo.id == "script" {
             if !script::script_tool(&todo.title, &todo.detail, &todo.ask) {
-                eprintln!("A process failed to run, skipping…");
+                eprintln!("Skipping the follownig task due to the previous error/s:\n***************\nid={}\ntitle={}\ndetail={}\nask={}\n***************",
+                todo.id, todo.title, todo.detail, todo.ask);
+            } else {
+                println!("Task {} succeeded", todo.title);
             }
         }
     }
