@@ -31,7 +31,7 @@ pub fn pmc(ask: bool, pm: &str, pkg: &str) -> bool {
             format!("flatpak install flathub {} {}", pkg, flag).trim_end().to_string()
         }
         "snapcraft" => {
-            format!("sudo snapcraft install {}", pkg)
+            format!("sudo snap install {}", pkg)
         }
         other => {
             eprintln!("Unknown package manager `{}`", other);
