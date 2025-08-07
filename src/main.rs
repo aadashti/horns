@@ -1,7 +1,8 @@
 use std::env;
 
-#[path = "restore/restore_file.rs"]
+mod args;
 mod restore;
+use crate::restore::restore_file::remote;
 
 fn main() {
     let args: Vec<String> = env::args().skip(1).collect();
@@ -25,7 +26,7 @@ fn main() {
             if cmd.as_str() == "restore"
                 && (opt.as_str() == "--remote" || opt.as_str() == "-r") =>
         {
-            restore::remote(repo);
+            restore::restore_file::remote(repo);
         }
 
         // Restore command with Backup ID

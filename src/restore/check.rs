@@ -1,14 +1,9 @@
-// check.rs
+// src/restore/check.rs
 
-use serde_json::Value;
+use crate::args::json_to_array;
+use crate::args::json_to_array::Config;
+use crate::args::terminal;
 use std::io;
-
-#[path = "../args/terminal.rs"]
-mod terminal;
-
-#[path = "../args/json_to_array.rs"]
-mod json_to_array;
-use json_to_array::Config;
 
 pub fn json_validation(directory_name: &str) -> Result<Config, io::Error> {
     println!("Scanning: {}", directory_name);

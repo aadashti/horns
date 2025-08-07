@@ -1,20 +1,10 @@
 // src/restore/restore_file.rs
 
+use crate::args::terminal;
+use crate::restore::check;
+use crate::restore::session;
 use chrono::Local;
 use std::{fs, io, path::PathBuf};
-
-#[path = "../args/terminal.rs"]
-mod terminal;
-
-#[path = "check.rs"]
-mod check;
-
-#[path = "session.rs"]
-mod session;
-
-#[path = "../args/json_to_array.rs"]
-mod json_to_array;
-use json_to_array::Config;
 
 pub fn generate_directory(directory_name: &str) -> Result<PathBuf, io::Error> {
     let now = Local::now();
