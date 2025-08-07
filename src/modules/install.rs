@@ -17,7 +17,9 @@ pub fn pmc(ask: bool, pm: &str, pkg: &str) -> bool {
         "apt" => {
             // `-y` only if ask == false
             let flag = if ask { "" } else { "-y" };
-            format!("sudo apt install {} {}", pkg, flag).trim_end().to_string()
+            format!("sudo apt install {} {}", pkg, flag)
+                .trim_end()
+                .to_string()
         }
         "pacstall" => {
             if ask {
@@ -28,7 +30,9 @@ pub fn pmc(ask: bool, pm: &str, pkg: &str) -> bool {
         }
         "flatpak" => {
             let flag = if ask { "" } else { "-y" };
-            format!("flatpak install flathub {} {}", pkg, flag).trim_end().to_string()
+            format!("flatpak install flathub {} {}", pkg, flag)
+                .trim_end()
+                .to_string()
         }
         "snapcraft" => {
             format!("sudo snap install {}", pkg)
@@ -48,7 +52,6 @@ pub fn pmc(ask: bool, pm: &str, pkg: &str) -> bool {
     }
 }
 
-
 pub fn install_tool(title: &str, package_string: &str, ask_str: &str) -> bool {
     let ask = ask_str == "true";
     let mut parts = package_string.split_whitespace();
@@ -61,13 +64,13 @@ pub fn install_tool(title: &str, package_string: &str, ask_str: &str) -> bool {
     };
     let packages: Vec<&str> = parts.collect();
 
-    println!("Installing `{}` with `{}`: {:?}", title, package_manager, packages);
+    println!(
+        "Installing `{}` with `{}`: {:?}",
+        title, package_manager, packages
+    );
 
     for pkg in packages {
-        println!(
-            "\x1B[32m[Installing {} >> {}]\x1B[0m",
-            pkg, title
-        );
+        println!("\x1B[32m[Installing {} >> {}]\x1B[0m", pkg, title);
         if !pmc(ask, package_manager, pkg) {
             return false;
         }
