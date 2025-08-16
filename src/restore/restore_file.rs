@@ -1,10 +1,34 @@
 // src/restore/restore_file.rs
 
-use crate::args::terminal;
 use crate::restore::check;
 use crate::restore::session;
 use chrono::Local;
-use std::{fs, io, path::PathBuf};
+use std::{
+    fs, io,
+    path::{Path, PathBuf},
+    process::Command,
+};
+
+
+pub fn forward(dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
+    let path_str = dir.to_str().ok_or_else(|| {
+        Box::new(io::Error::new(
+            io::ErrorKind::InvalidData,
+            "path contains non-UTF-8 characters",
+        )) as Box<dyn std::error::Error>
+    })?;
+
+    let config = check::json_validation(path_str).map_err(|e| {
+        Box::new(io::Error::new(
+            io::ErrorKind::Other,
+            format!("JSON validation failed: {}", e),
+        )) as Box<dyn std::error::Error>
+    })?;
+
+    session::start_session(&config);
+    Ok(())
+}
+
 
 pub fn generate_directory(directory_name: &str) -> Result<PathBuf, io::Error> {
     let now = Local::now();
@@ -16,42 +40,36 @@ pub fn generate_directory(directory_name: &str) -> Result<PathBuf, io::Error> {
 
     fs::create_dir_all(&dir)?;
 
-    // Convert to absolute path
     let absolute = dir.canonicalize()?;
     println!("Created directory: {}", absolute.display());
 
     Ok(absolute)
 }
 
-pub fn remote(link: &str) -> bool {
+
+pub fn remote(link: &str) -> Result<(), Box<dyn std::error::Error>> {
     let sanitized = link
         .replace("http://", "")
         .replace("https://", "")
-        .replace("/", "_")
+        .replace('/', "_")
         .replace(".git", "");
 
-    match generate_directory(&sanitized) {
-        Ok(dir) => {
-            let cmd = format!("git clone {} {}", link, dir.display());
+    let dir = generate_directory(&sanitized)?;
 
-            if let Err(e) = terminal::output(&cmd) {
-                eprintln!("git clone failed: {e}");
-                return false;
-            }
-            match check::json_validation(&dir.display().to_string()) {
-                Ok(config) => {
-                    session::start_session(&config);
-                    true
-                }
-                Err(e) => {
-                    eprintln!("[RESTORE FILE] JSON validation failed: {}", e);
-                    false
-                }
-            }
-        }
-        Err(e) => {
-            eprintln!("create_dir_all failed: {e}");
-            false
-        }
+    let status = Command::new("git")
+        .arg("clone")
+        .arg(link)
+        .arg(&dir)
+        .status()?;
+
+    if !status.success() {
+        return Err(Box::new(io::Error::new(
+            io::ErrorKind::Other,
+            format!("git clone failed with exit code: {:?}", status.code()),
+        )));
     }
+
+    forward(dir.as_path())?;
+
+    Ok(())
 }
