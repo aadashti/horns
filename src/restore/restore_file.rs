@@ -2,13 +2,13 @@
 
 use crate::restore::check;
 use crate::restore::session;
+use crate::args::json_and_config::load_toml_defs;
 use chrono::Local;
 use std::{
     fs, io,
     path::{Path, PathBuf},
     process::Command,
 };
-
 
 pub fn forward(dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
     let path_str = dir.to_str().ok_or_else(|| {
@@ -25,7 +25,20 @@ pub fn forward(dir: &Path) -> Result<(), Box<dyn std::error::Error>> {
         )) as Box<dyn std::error::Error>
     })?;
 
-    session::start_session(&config);
+    // Load TOML definitions (adjust path if Packages.toml lives elsewhere)
+    let toml_path = "Packages.toml";
+    let toml_defs = load_toml_defs(toml_path).map_err(|e| {
+        Box::new(io::Error::new(
+            io::ErrorKind::Other,
+            format!("Failed to load TOML definitions from {}: {}", toml_path, e),
+        )) as Box<dyn std::error::Error>
+    })?;
+
+    // Call session with both JSON config and TOML defs
+    println!("DEBUG: about to call start_session");
+    session::start_session(&config, &toml_defs);
+    println!("DEBUG: returned from start_session");
+
     Ok(())
 }
 

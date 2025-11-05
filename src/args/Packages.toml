@@ -1,0 +1,60 @@
+# Packages.toml
+# "enable" now serves as the setup/enabling command (previously `setup`).
+# Use:
+# - check: verifies presence (exit 0 if installed)
+# - bootstrap: installs the manager if check fails
+# - enable: post-bootstrap setup/enabling step (or run anytime to (re)enable)
+# - install: one-by-one install template with {{package}} (and optional placeholders)
+
+# Flatpak via Flathub
+[[package_manager]]
+id = "flatpak"
+check = "command -v flatpak"
+bootstrap = "sudo apt-get update && sudo apt-get install -y flatpak"
+enable = "sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo"
+install = "flatpak install {{package}}"
+others = { install_flatseal = "install Flatseal", include_beta = "include beta remotes" }
+
+# Snap
+[[package_manager]]
+id = "snap"
+check = "command -v snap"
+bootstrap = "sudo apt-get update && sudo apt-get install -y snapd"
+enable = "sudo systemctl enable --now snapd"
+install = "snap install {{package}}"
+
+# APT (Debian/Ubuntu)
+[[package_manager]]
+id = "apt"
+check = "command -v apt-get"
+bootstrap = ""  # usually present
+enable = "sudo apt-get update"
+install = "sudo apt-get install -y {{package}}"
+others = { update = "run apt-get update first", upgrade = "run apt-get upgrade -y first" }
+
+# Pacstall (Ubuntu community)
+[[package_manager]]
+id = "pacstall"
+check = "command -v pacstall"
+bootstrap = "bash -c 'curl -fsSL https://pacstall.dev/install | sudo bash'"
+enable = ""  # none required
+install = "pacstall -I {{package}}"
+others = { sync = "pacstall -S to sync repos", noconfirm = "skip confirmations" }
+
+# Nix
+[[package_manager]]
+id = "nix"
+check = "command -v nix-env"
+bootstrap = "sh <(curl -L https://nixos.org/nix/install) --no-daemon"
+enable = ""  # none required
+install = "nix-env -iA {{package}}"
+others = { flakes = "use flakes", experimental = "enable experimental features" }
+
+# AppImage
+[[package_manager]]
+id = "appimage"
+check = "command -v appimage-run"
+bootstrap = "sudo apt-get install -y appimagelauncher"
+enable = ""  # none required
+install = "appimage-run {{package}}"
+others = { include_appimage_manager = "install AppImageLauncher/AppImageManager" }
